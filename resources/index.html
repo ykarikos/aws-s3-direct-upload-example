@@ -6,38 +6,31 @@
 
  <script type="text/javascript">
 function uploadFile(file, signedRequest, url) {
-  const xhr = new XMLHttpRequest();
-  xhr.open('PUT', signedRequest);
-  xhr.onreadystatechange = () => {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        const e = document.getElementById('link-to-file');
-        e.setAttribute("href", url);
-        e.style.display = "inline";
-      }
-      else{
-        alert('Could not upload file.');
-      }
+  fetch(signedRequest, {
+    method: 'PUT',
+    body: file
+  }).then(response => {
+    if (response.ok) {
+      const e = document.getElementById('link-to-file');
+      e.setAttribute("href", url);
+      e.style.display = "inline";
+    } else {
+      alert('Could not upload file.');
     }
-  };
-  xhr.send(file);
+  }).catch(err => {
+    alert('Could not upload file.');
+    console.error(err);
+  });
 }
 
 function getSignedRequest(file) {
-  const xhr = new XMLHttpRequest();
-  xhr.open('GET', `/sign-s3?file-name=${file.name}&file-type=${file.type}`);
-  xhr.onreadystatechange = () => {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        const response = JSON.parse(xhr.responseText);
-        uploadFile(file, response.signedRequest, response.url);
-      }
-      else{
-        alert('Could not get signed URL.');
-      }
-    }
-  };
-  xhr.send();
+  fetch(`/sign-s3?file-name=${file.name}&file-type=${file.type}`)
+  .then(response => response.json())
+  .then(response => uploadFile(file, response.signedRequest, response.url))
+  .catch(err => {
+    alert('Could not get signed URL.');
+    console.error(err);
+  });
 }
 
 function initialize() {
