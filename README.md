@@ -45,3 +45,7 @@ For more information about using Clojure on Heroku, see these Dev Center article
 ## License
 
 Licensed with [Eclipse Public License v1.0](http://www.eclipse.org/legal/epl-v10.html).
+
+## Thanks
+
+This project is a grateful recipient of the [Futurice](http://futurice.com)'s [Spice Program](http://spiceprogram.org/oss-sponsorship/).
